@@ -5,6 +5,7 @@ import { Document, Packer, Paragraph, TextRun } from 'docx';
 // @ts-expect-error: file-saver has no types
 import { saveAs } from 'file-saver';
 import copy from 'copy-to-clipboard';
+import { Loader2 } from 'lucide-react';
 
 const sampleResume = `John Smith
 Software Engineer
@@ -200,14 +201,22 @@ const ResumeBuilderPage: React.FC = () => {
     setError(null);
     setBuildResult(null);
     setResumeReady(false);
+    await Promise.resolve(); // Force render
+    const start = Date.now();
     try {
       const result = await analyzeResumeText(resumeText, 'demo_user_001');
       setBuildResult(result);
-      setTimeout(() => setResumeReady(true), 100); // allow DOM to update
+      setTimeout(() => setResumeReady(true), 100);
     } catch {
       setError('Failed to generate resume. Please try again.');
     } finally {
-      setLoading(false);
+      const elapsed = Date.now() - start;
+      const minTime = 1000;
+      if (elapsed < minTime) {
+        setTimeout(() => setLoading(false), minTime - elapsed);
+      } else {
+        setLoading(false);
+      }
     }
   };
 
@@ -334,8 +343,19 @@ const ResumeBuilderPage: React.FC = () => {
             Use Sample Resume
           </button>
         </div>
-        <button type="submit" className="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700" disabled={loading || !resumeText.trim()}>
-          {loading ? 'Generating...' : 'Generate Resume with AI'}
+        <button
+          type="submit"
+          className="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700"
+          disabled={loading || !resumeText.trim()}
+        >
+          {loading ? (
+            <span className="flex items-center space-x-2">
+              <Loader2 className="w-5 h-5 animate-spin" />
+              <span>Generating...</span>
+            </span>
+          ) : (
+            'Generate Resume with AI'
+          )}
         </button>
         {error && <div className="text-red-600 mt-2">{error}</div>}
       </form>

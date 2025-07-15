@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { Upload, FileText, Loader2, Sparkles, CheckCircle } from 'lucide-react';
+import { Upload, Loader2, Sparkles, CheckCircle } from 'lucide-react';
 import { getPresignedUrl, uploadFileToGCS, analyzeResumeGCS } from '../services/aiService';
 import { AnalysisResult } from '../types';
 
@@ -21,6 +21,8 @@ const ResumeUpload: React.FC<ResumeUploadProps> = ({
 
   const handleAnalyze = async () => {
     setIsAnalyzing(true);
+    await Promise.resolve(); // Force render
+    const start = Date.now();
     try {
       if (selectedFile) {
         // 1. Get presigned URL
@@ -43,7 +45,13 @@ const ResumeUpload: React.FC<ResumeUploadProps> = ({
       console.error('Analysis failed:', error);
       // Optionally show error to user
     } finally {
-      setIsAnalyzing(false);
+      const elapsed = Date.now() - start;
+      const minTime = 1000;
+      if (elapsed < minTime) {
+        setTimeout(() => setIsAnalyzing(false), minTime - elapsed);
+      } else {
+        setIsAnalyzing(false);
+      }
     }
   };
 
@@ -80,42 +88,42 @@ const ResumeUpload: React.FC<ResumeUploadProps> = ({
     fileInputRef.current?.click();
   };
 
-  const sampleResume = `John Smith
-Software Engineer
-Email: john.smith@email.com | Phone: (555) 123-4567
-LinkedIn: linkedin.com/in/johnsmith
+//   const sampleResume = `John Smith
+// Software Engineer
+// Email: john.smith@email.com | Phone: (555) 123-4567
+// LinkedIn: linkedin.com/in/johnsmith
 
-PROFESSIONAL SUMMARY
-Experienced Full-Stack Developer with 5+ years of expertise in React, Node.js, and cloud technologies. Proven track record of delivering scalable web applications and leading development teams.
+// PROFESSIONAL SUMMARY
+// Experienced Full-Stack Developer with 5+ years of expertise in React, Node.js, and cloud technologies. Proven track record of delivering scalable web applications and leading development teams.
 
-TECHNICAL SKILLS
-• Frontend: React, TypeScript, JavaScript, HTML5, CSS3, Tailwind CSS
-• Backend: Node.js, Express, Python, Django, REST APIs
-• Databases: PostgreSQL, MongoDB, Redis
-• Cloud: AWS, Docker, Kubernetes, CI/CD
-• Tools: Git, Jest, Webpack, Figma
+// TECHNICAL SKILLS
+// • Frontend: React, TypeScript, JavaScript, HTML5, CSS3, Tailwind CSS
+// • Backend: Node.js, Express, Python, Django, REST APIs
+// • Databases: PostgreSQL, MongoDB, Redis
+// • Cloud: AWS, Docker, Kubernetes, CI/CD
+// • Tools: Git, Jest, Webpack, Figma
 
-PROFESSIONAL EXPERIENCE
+// PROFESSIONAL EXPERIENCE
 
-Senior Software Engineer | TechCorp Inc. | 2021 - Present
-• Led development of customer-facing web application serving 100K+ users
-• Implemented microservices architecture reducing system latency by 40%
-• Mentored junior developers and conducted code reviews
-• Collaborated with product managers and designers on feature planning
+// Senior Software Engineer | TechCorp Inc. | 2021 - Present
+// • Led development of customer-facing web application serving 100K+ users
+// • Implemented microservices architecture reducing system latency by 40%
+// • Mentored junior developers and conducted code reviews
+// • Collaborated with product managers and designers on feature planning
 
-Software Developer | StartupXYZ | 2019 - 2021
-• Built responsive web applications using React and Node.js
-• Developed RESTful APIs and integrated third-party services
-• Optimized database queries improving performance by 30%
-• Participated in agile development processes and sprint planning
+// Software Developer | StartupXYZ | 2019 - 2021
+// • Built responsive web applications using React and Node.js
+// • Developed RESTful APIs and integrated third-party services
+// • Optimized database queries improving performance by 30%
+// • Participated in agile development processes and sprint planning
 
-EDUCATION
-Bachelor of Science in Computer Science
-University of Technology | 2015 - 2019
+// EDUCATION
+// Bachelor of Science in Computer Science
+// University of Technology | 2015 - 2019
 
-CERTIFICATIONS
-• AWS Certified Solutions Architect
-• Google Cloud Professional Developer`;
+// CERTIFICATIONS
+// • AWS Certified Solutions Architect
+// • Google Cloud Professional Developer`;
 
   return (
     <div className="max-w-4xl mx-auto">
@@ -180,11 +188,11 @@ CERTIFICATIONS
             </p>
           </div>
 
-          <div className="text-center">
+          {/* <div className="text-center">
             <span className="text-gray-500">or</span>
-          </div>
+          </div> */}
 
-          <div>
+          {/* <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Paste Resume Text
             </label>
@@ -198,9 +206,9 @@ CERTIFICATIONS
               className="w-full h-64 p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
               disabled={isAnalyzing}
             />
-          </div>
+          </div> */}
 
-          <button
+          {/* <button
             onClick={() => setResumeText(sampleResume)}
             className="w-full bg-gray-100 text-gray-700 py-2 px-4 rounded-lg hover:bg-gray-200 transition-colors flex items-center justify-center space-x-2"
             type="button"
@@ -208,7 +216,7 @@ CERTIFICATIONS
           >
             <FileText className="w-4 h-4" />
             <span>Use Sample Resume</span>
-          </button>
+          </button> */}
 
           <button
             onClick={handleAnalyze}

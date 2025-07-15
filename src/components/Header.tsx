@@ -12,13 +12,13 @@ const Header: React.FC<HeaderProps> = ({ analysisResult }) => {
   const location = useLocation();
 
   const navigation = [
-    { name: 'Home', href: '/' },
+    // { name: 'Home', href: '/' },
     { name: 'Upload Resume', href: '/upload' },
-    { name: 'Analysis', href: '/analysis', disabled: !analysisResult },
-    { name: 'Job Matches', href: '/jobs', disabled: !analysisResult },
+    // { name: 'Analysis', href: '/analysis', disabled: !analysisResult },
+    // { name: 'Job Matches', href: '/jobs', disabled: !analysisResult },
     { name: 'Resume Builder', href: '/resume-builder' },
-    { name: 'About', href: '/about' },
-    { name: 'Contact', href: '/contact' },
+    // { name: 'About', href: '/about' },
+    // { name: 'Contact', href: '/contact' },
   ];
 
   const isActive = (href: string) => location.pathname === href;

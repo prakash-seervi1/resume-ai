@@ -19,7 +19,7 @@ const AnalysisPage: React.FC<AnalysisPageProps> = ({ result }) => {
         </div>
 
         {/* Quick Actions */}
-        <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
+        {/* <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
           <Link
             to="/jobs"
             className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-3 rounded-lg font-medium hover:from-blue-700 hover:to-purple-700 transition-all flex items-center justify-center space-x-2"
@@ -28,7 +28,7 @@ const AnalysisPage: React.FC<AnalysisPageProps> = ({ result }) => {
             <span>View Job Matches</span>
             <ArrowRight className="w-4 h-4" />
           </Link>
-        </div>
+        </div> */}
       </div>
 
       <AnalysisResults result={result} />
